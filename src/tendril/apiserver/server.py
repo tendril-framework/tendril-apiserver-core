@@ -14,7 +14,7 @@ logger = get_logger(__name__, DEFAULT)
 
 core_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), os.pardir)
 
-app = FastAPI()
+apiserver = FastAPI()
 
 
 def server_basic_options():
@@ -70,7 +70,7 @@ def prepare_app():
     from tendril.config import APISERVER_CORS_METHODS
     from tendril.config import APISERVER_CORS_HEADERS
 
-    app.add_middleware(
+    apiserver.add_middleware(
         CORSMiddleware,
         allow_origins=APISERVER_CORS_ORIGINS,
         allow_credentials=True,
@@ -87,7 +87,7 @@ def run_server():
 
     server = Server(
         Config(
-            app,
+            apiserver,
             **server_opts
         ),
     )
