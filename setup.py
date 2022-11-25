@@ -29,6 +29,8 @@ def read(fname):
 
 
 core_dependencies = [
+    'uvicorn',
+    'fastapi',
     'tendril-config',
 ]
 
@@ -86,7 +88,11 @@ setup(
         'dev': build_requires,
     },
     platforms='any',
-    entry_points={},
+    entry_points={
+        'console_scripts': [
+            'apiserver = tendril.apiserver.server:run_server'
+        ]
+    },
     include_package_data=True
 )
 
