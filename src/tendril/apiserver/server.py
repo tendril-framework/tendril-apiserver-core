@@ -1,8 +1,9 @@
 
 
 import os
+
+from tendril.apiserver.core import apiserver
 from uvicorn import Config, Server
-from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from tendril.config import INSTANCE_ROOT
@@ -13,8 +14,6 @@ logger = get_logger(__name__, DEFAULT)
 
 
 core_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), os.pardir)
-
-apiserver = FastAPI()
 
 
 def server_basic_options():
@@ -77,6 +76,10 @@ def prepare_app():
         allow_methods=APISERVER_CORS_METHODS,
         allow_headers=APISERVER_CORS_HEADERS
     )
+
+
+def install_routers():
+    pass
 
 
 def run_server():

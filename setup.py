@@ -31,6 +31,7 @@ def read(fname):
 core_dependencies = [
     'uvicorn',
     'fastapi',
+    'pydantic',
     'tendril-config',
 ]
 
