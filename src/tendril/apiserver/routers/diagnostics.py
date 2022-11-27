@@ -29,8 +29,8 @@ async def echo_login(message: GenericMessage,
 
 
 @connection_diagnostics.post("/echo-scope", dependencies=[Depends(authn_dependency)])
-async def echo(message: GenericMessage,
-               user: AuthUserModel = auth_spec(scopes=['system:monitoring'])):
+async def echo_scoped(message: GenericMessage,
+                      user: AuthUserModel = auth_spec(scopes=['system:administration'])):
     return {'message': message.message}
 
 
