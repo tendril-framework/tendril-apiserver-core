@@ -33,6 +33,7 @@ core_dependencies = [
     'fastapi',
     'pydantic',
     'tendril-config',
+    'tendril-auth',
 ]
 
 install_requires = core_dependencies + ['wheel']
