@@ -39,6 +39,10 @@ config_elements_server = [
         parser=int
     ),
     ConfigOption(
+        'APISERVER_PREFIX', "'/v1'",
+        "API Prefix. Not presently used.",
+    ),
+    ConfigOption(
         'APISERVER_AUTO_RELOAD', "False",
         "Automatically reload the server on changes. This might actually "
         "not have any real effects and probably should be left alone in production.",
