@@ -1,20 +1,20 @@
 
 
-
 from fastapi import APIRouter
+from fastapi import Depends
 
 from tendril.authn import authn_dependency
 from tendril.authn import AuthUserModel
 from tendril.authn import auth_spec
 
 
-system_monitoring = APIRouter(prefix='system',
-                              tags="System Monitoring",
-                              dependencies=Depends[authn_dependency])
+system_monitoring = APIRouter(prefix='/system',
+                              tags=["System Monitoring"],
+                              dependencies=[Depends(authn_dependency)])
 
-system_administration = APIRouter(prefix='system',
-                                  tags="System Administration",
-                                  dependencies=Depends[authn_dependency])
+system_administration = APIRouter(prefix='/system',
+                                  tags=["System Administration"],
+                                  dependencies=[Depends(authn_dependency)])
 
 
 from tendril.utils.versions import get_versions

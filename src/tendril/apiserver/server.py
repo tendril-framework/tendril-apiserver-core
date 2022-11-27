@@ -1,16 +1,17 @@
 
 
 import os
+import importlib
 
-from tendril.apiserver.core import apiserver
 from uvicorn import Config, Server
 from fastapi.middleware.cors import CORSMiddleware
 
 from tendril.config import INSTANCE_ROOT
+from tendril.apiserver.core import apiserver
+from tendril.utils.versions import get_namespace_package_names
 
-from tendril.utils.log import get_logger
-from tendril.utils.log import DEFAULT
-logger = get_logger(__name__, DEFAULT)
+from tendril.utils import log
+logger = log.get_logger(__name__, log.DEFAULT)
 
 
 core_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), os.pardir)
@@ -79,7 +80,14 @@ def prepare_app():
 
 
 def install_routers():
-    pass
+    for p in get_namespace_package_names('tendril.apiserver.routers'):
+        try:
+            m = importlib.import_module(p)
+            for router in m.routers:
+                logger.info("Loading API router on {0} from {1}".format(router.prefix, p))
+                apiserver.include_router(router)
+        except ImportError:
+            raise
 
 
 def run_server():
@@ -87,6 +95,7 @@ def run_server():
     server_opts.update(server_ssl_options())
 
     prepare_app()
+    install_routers()
 
     server = Server(
         Config(
