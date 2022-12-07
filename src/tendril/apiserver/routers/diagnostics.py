@@ -6,10 +6,10 @@ from fastapi import APIRouter
 from fastapi import Depends
 from pydantic import BaseModel
 
-from tendril.authn import authn_dependency
-from tendril.authn import AuthUserModel
-from tendril.authn import auth_spec
-from tendril.authn import get_user_profile
+from tendril.authn.users import authn_dependency
+from tendril.authn.users import AuthUserModel
+from tendril.authn.users import auth_spec
+from tendril.authn.users import get_user_profile
 
 from tendril.utils import log
 logger = log.get_logger(__name__, log.DEBUG)

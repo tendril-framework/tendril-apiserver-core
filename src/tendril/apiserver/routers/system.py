@@ -3,9 +3,9 @@
 from fastapi import APIRouter
 from fastapi import Depends
 
-from tendril.authn import authn_dependency
-from tendril.authn import AuthUserModel
-from tendril.authn import auth_spec
+from tendril.authn.users import authn_dependency
+from tendril.authn.users import AuthUserModel
+from tendril.authn.users import auth_spec
 
 
 system_monitoring = APIRouter(prefix='/system',
