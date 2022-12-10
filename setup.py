@@ -34,6 +34,7 @@ core_dependencies = [
     'pydantic',
     'tendril-config',
     'tendril-auth',
+    'python-multipart',
 ]
 
 install_requires = core_dependencies + ['wheel']
