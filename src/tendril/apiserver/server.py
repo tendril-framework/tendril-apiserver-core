@@ -80,12 +80,22 @@ def prepare_app():
 
 
 def install_routers():
+    from tendril.config import APISERVER_PREFIX
+
+    api_root = apiserver
+
+    if APISERVER_PREFIX:
+        from fastapi import FastAPI
+        prefixed_api = FastAPI()
+        apiserver.mount(APISERVER_PREFIX, prefixed_api)
+        api_root = prefixed_api
+
     for p in get_namespace_package_names('tendril.apiserver.routers'):
         try:
             m = importlib.import_module(p)
             for router in m.routers:
                 logger.info("Loading API router on {0} from {1}".format(router.prefix, p))
-                apiserver.include_router(router)
+                api_root.include_router(router)
         except ImportError:
             raise
 
