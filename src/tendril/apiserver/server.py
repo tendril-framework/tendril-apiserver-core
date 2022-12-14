@@ -5,6 +5,7 @@ import importlib
 
 from uvicorn import Config, Server
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi_pagination import add_pagination
 
 from tendril.config import INSTANCE_ROOT
 from tendril.apiserver.core import apiserver
@@ -89,6 +90,8 @@ def install_routers():
         prefixed_api = FastAPI()
         apiserver.mount(APISERVER_PREFIX, prefixed_api)
         api_root = prefixed_api
+
+    add_pagination(api_root)
 
     for p in get_namespace_package_names('tendril.apiserver.routers'):
         try:

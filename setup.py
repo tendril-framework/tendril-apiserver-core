@@ -35,6 +35,7 @@ core_dependencies = [
     'tendril-config',
     'tendril-auth',
     'python-multipart',
+    'fastapi-pagination'
 ]
 
 install_requires = core_dependencies + ['wheel']
