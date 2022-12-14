@@ -91,8 +91,6 @@ def install_routers():
         apiserver.mount(APISERVER_PREFIX, prefixed_api)
         api_root = prefixed_api
 
-    add_pagination(api_root)
-
     for p in get_namespace_package_names('tendril.apiserver.routers'):
         try:
             m = importlib.import_module(p)
@@ -101,6 +99,9 @@ def install_routers():
                 api_root.include_router(router)
         except ImportError:
             raise
+
+    logger.info("Installing FastAPI Pagination")
+    add_pagination(api_root)
 
 
 def run_server():
