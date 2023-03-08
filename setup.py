@@ -33,7 +33,7 @@ core_dependencies = [
     'fastapi',
     'pydantic',
     'tendril-config',
-    'tendril-auth',
+    'tendril-auth>=0.3.0',
     'python-multipart',
     'fastapi-pagination'
 ]
