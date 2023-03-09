@@ -104,12 +104,25 @@ def install_routers():
     add_pagination(api_root)
 
 
+def install_exc():
+    for p in get_namespace_package_names('tendril.apiserver.exceptions'):
+        try:
+            m = importlib.import_module(p)
+            for exc_class, handler in m.handlers.items():
+                logger.info("Adding API Translator for Exc "
+                            "{0} from {1}".format(exc_class.__name__, p))
+                apiserver.add_exception_handler(exc_class, handler)
+        except ImportError:
+            raise
+
+
 def run_server():
     server_opts = server_basic_options()
     server_opts.update(server_ssl_options())
 
     prepare_app()
     install_routers()
+    install_exc()
 
     server = Server(
         Config(
