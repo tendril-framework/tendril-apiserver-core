@@ -80,7 +80,7 @@ def prepare_app():
     )
 
 
-def install_routers():
+def install():
     from tendril.config import APISERVER_PREFIX
 
     api_root = apiserver
@@ -103,15 +103,13 @@ def install_routers():
     logger.info("Installing FastAPI Pagination")
     add_pagination(api_root)
 
-
-def install_exc():
     for p in get_namespace_package_names('tendril.apiserver.exceptions'):
         try:
             m = importlib.import_module(p)
             for exc_class, handler in m.handlers.items():
-                logger.info("Adding API Translator for Exc "
+                logger.info("Adding Translator "
                             "{0} from {1}".format(exc_class.__name__, p))
-                apiserver.add_exception_handler(exc_class, handler)
+                api_root.add_exception_handler(exc_class, handler)
         except ImportError:
             raise
 
@@ -121,8 +119,7 @@ def run_server():
     server_opts.update(server_ssl_options())
 
     prepare_app()
-    install_routers()
-    install_exc()
+    install()
 
     server = Server(
         Config(
