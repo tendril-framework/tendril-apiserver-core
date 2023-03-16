@@ -115,6 +115,8 @@ def install():
 
 
 def run_server():
+    from tendril.config import APISERVER_ENABLED
+
     server_opts = server_basic_options()
     server_opts.update(server_ssl_options())
 
@@ -127,4 +129,8 @@ def run_server():
             **server_opts
         ),
     )
-    server.run()
+
+    if APISERVER_ENABLED:
+        server.run()
+    else:
+        logger.info("API Server is disabled, so not starting.")

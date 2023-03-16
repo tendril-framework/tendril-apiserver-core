@@ -30,6 +30,14 @@ depends = ['tendril.config.core']
 
 config_elements_server = [
     ConfigOption(
+        'APISERVER_ENABLED', "True",
+        "Whether the API server is to be started. Irrespective of "
+        "this configuration option, the API server will still be "
+        "constructed normally if the code path is triggered, but the "
+        "final server.run() up will be skipped.",
+        parser=bool
+    ),
+    ConfigOption(
         'APISERVER_BIND_IP', "'0.0.0.0'",
         "IP Address the server should bind to. See uvicorn.Server and uvicorn.Config."
     ),
