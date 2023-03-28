@@ -19,12 +19,18 @@ system_administration = APIRouter(prefix='/system',
                                                 auth_spec(scopes=['system:administration'])])
 
 
+from tendril import config
 from tendril.utils.versions import get_versions
 
 
-@system_monitoring.get("/versions", tags=["System Monitoring"])
-async def versions(user: AuthUserModel = auth_spec()):
+@system_monitoring.get("/versions")
+async def versions():
     return {k: v for (k, v) in get_versions('tendril')}
+
+
+@system_monitoring.get("/config")
+async def config():
+    return config.json_config()
 
 
 routers = [
