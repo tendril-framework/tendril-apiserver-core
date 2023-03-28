@@ -29,7 +29,7 @@ async def versions():
 
 
 @system_monitoring.get("/config")
-async def config():
+async def tendril_config():
     return config.json_config()
 
 
