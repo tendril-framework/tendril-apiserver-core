@@ -93,9 +93,15 @@ def install():
 
     for p in get_namespace_package_names('tendril.apiserver.routers'):
         try:
+            logger.debug(f"Searching for API Routers in {p}")
             m = importlib.import_module(p)
             for router in m.routers:
-                logger.info("Loading API router on {0} from {1}".format(router.prefix, p))
+                try:
+                    name = router.tags[0]
+                except:
+                    name = ''
+                logger.info(f"Mounting on {router.prefix} "
+                            f"from {p} \n\t\t\t ({name})")
                 api_root.include_router(router)
         except ImportError:
             raise
