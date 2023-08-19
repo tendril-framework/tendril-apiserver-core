@@ -2,12 +2,16 @@
 
 import os
 import importlib
+import inflection
 
 from uvicorn import Config, Server
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi_pagination import add_pagination
+from fastapi.openapi.utils import get_openapi
 
 from tendril.config import INSTANCE_ROOT
+from tendril.config import INSTANCE_NAME
+from tendril.config import LOG_HOSTNAME_PREFIX
 from tendril.apiserver.core import apiserver
 from tendril.utils.versions import get_namespace_package_names
 
@@ -80,6 +84,35 @@ def prepare_app():
     )
 
 
+def _get_api_title():
+    iname = INSTANCE_NAME
+    if LOG_HOSTNAME_PREFIX:
+        hostname = log._hostname.removeprefix(LOG_HOSTNAME_PREFIX)
+    else:
+        hostname = log._hostname
+
+    hostname = inflection.titleize(hostname)
+    return f"{hostname} {iname.upper()} API"
+
+
+def tendril_openapi(app):
+    # TODO This breaks the API
+    if app.openapi_schema:
+        return app.openapi_schema
+
+
+    openapi_schema = get_openapi(
+        title=_get_api_title(),
+        version="dev",
+        routes=app.routes
+    )
+    openapi_schema["info"]["x-logo"] = {
+        "url": "https://fastapi.tiangolo.com/img/logo-margin/logo-teal.png"
+    }
+    app.openapi_schema = openapi_schema
+    return app.openapi_schema
+
+
 def install():
     from tendril.config import APISERVER_PREFIX
 
@@ -87,7 +120,7 @@ def install():
 
     if APISERVER_PREFIX:
         from fastapi import FastAPI
-        prefixed_api = FastAPI()
+        prefixed_api = FastAPI(title=_get_api_title())
         apiserver.mount(APISERVER_PREFIX, prefixed_api)
         api_root = prefixed_api
 
@@ -118,6 +151,9 @@ def install():
                 api_root.add_exception_handler(exc_class, handler)
         except ImportError:
             raise
+
+    # logger.info("Preparing Swagger UI")
+    # api_root.openapi_schema = tendril_openapi(api_root)
 
 
 def run_server():
