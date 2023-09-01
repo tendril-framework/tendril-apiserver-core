@@ -124,6 +124,8 @@ def install():
         apiserver.mount(APISERVER_PREFIX, prefixed_api)
         api_root = prefixed_api
 
+    routers = []
+
     for p in get_namespace_package_names('tendril.apiserver.routers'):
         try:
             logger.debug(f"Searching for API Routers in {p}")
@@ -135,9 +137,12 @@ def install():
                     name = ''
                 logger.info(f"Mounting on {router.prefix} "
                             f"from {p} \n\t\t\t ({name})")
-                api_root.include_router(router)
+                routers.append(router)
         except ImportError:
             raise
+
+    for router in routers:
+        api_root.include_router(router)
 
     logger.info("Installing FastAPI Pagination")
     add_pagination(api_root)
