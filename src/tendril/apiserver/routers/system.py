@@ -20,12 +20,12 @@ system_administration = APIRouter(prefix='/system',
 
 
 from tendril import config
-from tendril.utils.versions import get_versions
+from tendril.utils.versions import versions
 
 
 @system_monitoring.get("/versions")
-async def versions():
-    return {k: v for (k, v) in get_versions('tendril')}
+async def package_versions():
+    return versions()
 
 
 @system_monitoring.get("/config")
