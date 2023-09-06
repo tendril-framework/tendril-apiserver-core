@@ -11,6 +11,7 @@ from fastapi.openapi.utils import get_openapi
 
 from tendril.config import INSTANCE_ROOT
 from tendril.config import INSTANCE_NAME
+from tendril.config import COMPONENT_NAME
 from tendril.config import LOG_HOSTNAME_PREFIX
 from tendril.apiserver.core import apiserver
 from tendril.utils.versions import get_namespace_package_names
@@ -86,13 +87,20 @@ def prepare_app():
 
 def _get_api_title():
     iname = INSTANCE_NAME
+    cname = COMPONENT_NAME
     if LOG_HOSTNAME_PREFIX:
         hostname = log._hostname.removeprefix(LOG_HOSTNAME_PREFIX)
     else:
         hostname = log._hostname
 
-    hostname = inflection.titleize(hostname)
-    return f"{hostname} {iname.upper()} API"
+    if hostname.startswith(cname):
+        hostname.removeprefix(cname)
+
+    hostname = hostname.rstrip(' -_/')
+
+    return ' '.join([inflection.titleize(iname),
+                     inflection.titleize(cname),
+                     "API @", hostname])
 
 
 def tendril_openapi(app):
