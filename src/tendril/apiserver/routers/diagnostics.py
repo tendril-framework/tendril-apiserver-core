@@ -37,7 +37,7 @@ async def echo_login(message: GenericMessage,
     logger.debug("               with email : {}".format(user.email))
     logger.debug(json.dumps(user_profile, indent=2))
     return {
-        'user-profile': user_profile,
+        'userProfile': user_profile,
         'message': message.message
     }
 
@@ -49,10 +49,11 @@ async def echo_scoped(message: GenericMessage,
     logger.debug("Got Incoming Test Message : {}".format(message))
     logger.debug("      from logged in User : {}".format(user.id))
     logger.debug("               with email : {}".format(user.email))
-    logger.debug("              with scopes : {}".format(user.permissions))
+    logger.debug("              with scopes : {}".format("TODO"))
+    logger.debug("         with permissions : {}".format(user.permissions))
     logger.debug(json.dumps(user_profile, indent=2))
     return {
-        'user-profile': user_profile,
+        'userProfile': user_profile,
         'message': message.message
     }
 
