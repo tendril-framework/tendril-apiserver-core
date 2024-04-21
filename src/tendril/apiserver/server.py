@@ -5,6 +5,8 @@ import importlib
 import inflection
 
 from uvicorn import Config, Server
+from fastapi.requests import Request
+from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi_pagination import add_pagination
 from fastapi.openapi.utils import get_openapi
@@ -69,7 +71,6 @@ def server_ssl_options():
         'ssl_keyfile': APISERVER_SSL_KEYFILE,
         'ssl_certfile': APISERVER_SSL_CERTFILE
     }
-
 
 def prepare_app():
     from tendril.config import APISERVER_CORS_ORIGINS
@@ -164,6 +165,19 @@ def install():
                 api_root.add_exception_handler(exc_class, handler)
         except ImportError:
             raise
+
+    @api_root.exception_handler(Exception)
+    async def catchall_exception_handler(request: Request, exc: Exception):
+        logger.exception(exc)
+        return JSONResponse(
+            status_code=500,
+            content={
+                "message": (
+                    f"Failed method {request.method} at URL {request.url}.\n"
+                    f" Exception message: \n{exc!r}."
+                )
+            }
+        )
 
     # logger.info("Preparing Swagger UI")
     # api_root.openapi_schema = tendril_openapi(api_root)
